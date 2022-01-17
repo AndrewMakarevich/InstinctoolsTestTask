@@ -16,14 +16,15 @@ const UserShema = new Schema<IUser>({
 const EmployeeShema = new Schema<IEmployee>({
     ...UserShema.obj,
     workPlaceNumber: { type: Number, required: true, default: 0 },
-    startTimeLunch: { type: String, required: true, validate: /^[0-2][0-9]:[0-5][0-9]$/ },
-    endTimeLunch: { type: String, required: true, validate: /^[0-2][0-9]:[0-5][0-9]$/ }
+    startTimeLunch: { type: String, required: true, validate: /^(([0-1][0-9])|([0-2][0-3])):[0-5][0-9]$/ },
+    endTimeLunch: { type: String, required: true, validate: /^(([0-1][0-9])|([0-2][0-3])):[0-5][0-9]$/ }
 }, { timestamps: true });
+
 
 const ManagerShema = new Schema<IManager>({
     ...UserShema.obj,
-    startTimeReception: { type: String, required: true, validate: /^[0-2][0-9]:[0-5][0-9]$/ },
-    endTimeReception: { type: String, required: true, validate: /^[0-2][0-9]:[0-5][0-9]$/ }
+    startTimeReception: { type: String, required: true, validate: /^(([0-1][0-9])|([0-2][0-3])):[0-5][0-9]$/ },
+    endTimeReception: { type: String, required: true, validate: /^(([0-1][0-9])|([0-2][0-3])):[0-5][0-9]$/ }
 }, { timestamps: true });
 
 // MODELS

@@ -3,9 +3,13 @@ import express from 'express';
 import mongoose from 'mongoose';
 import router from './routes/index';
 import errorHandlingMiddleware from './middleware/errorHandlingMiddleware';
+import path from 'path';
+import fileUpload from 'express-fileupload';
 
 const app = express();
 
+app.use(fileUpload());
+app.use(express.static(path.resolve(__dirname, 'static')));
 app.use(express.json());
 app.use('/api', router);
 app.use(errorHandlingMiddleware);
