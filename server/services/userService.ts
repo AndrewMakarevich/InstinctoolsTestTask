@@ -8,9 +8,6 @@ import fs from 'fs';
 const uuid = require('uuid');
 
 class UserService {
-    private parseJSON(jsonObj: string, objectToEmbedData: Object) {
-
-    }
     private uploadPhoto(pathToFoldier: string, photo?: fileUpload.UploadedFile): string | undefined {
         if (photo) {
             try {
@@ -23,7 +20,7 @@ class UserService {
         }
         return undefined;
     }
-    async getUsers(type: string, filterObj: IintermediatePropObj, page: string, limit: string) {
+    async getUsers(type: string, filterObj: IintermediatePropObj, page: number, limit: number) {
         if (!(type === "employee" || type === "manager" || type === "all")) {
             throw ApiError.badRequest('Incorrect query "type" param, allowable param values: employee, manager, all');
         }
@@ -46,20 +43,24 @@ class UserService {
             }
         }
         createFilterObj(filterObj, filterProps);
-        console.log(filterProps);
+        // console.log(filterProps);
         let result;
-        let skipValue = Number(limit) * (Number(page) - 1);
+        let skipValue = limit * (page - 1);
         switch (type) {
             case 'employee':
                 result = {
-                    result: await EmployeeModel.find(filterProps).skip(skipValue).limit(Number(limit)),
-                    count: await EmployeeModel.find(filterProps).count()
+                    result: await EmployeeModel.find(filterProps).skip(skipValue).limit(limit),
+                    elementsTotal: await EmployeeModel.find(filterProps).count(),
+                    currentPage: page,
+                    pageQty: Math.ceil(await EmployeeModel.find(filterProps).count() / limit)
                 };
                 break;
             case 'manager':
                 result = {
-                    result: await ManagerModel.find(filterProps).skip(skipValue).limit(Number(limit)),
-                    count: await ManagerModel.find(filterProps).count()
+                    result: await ManagerModel.find(filterProps).skip(skipValue).limit(limit),
+                    elementsTotal: await ManagerModel.find(filterProps).count(),
+                    currentPage: page,
+                    pageQty: Math.ceil(await ManagerModel.find(filterProps).count() / limit)
                 };
                 break;
             case 'all':
@@ -67,8 +68,10 @@ class UserService {
                 const employees = await EmployeeModel.find(filterProps);;
                 const resArray = [...employees, ...managers];
                 result = {
-                    result: resArray.slice(skipValue, skipValue + Number(limit)),
-                    count: resArray.length
+                    result: resArray.slice(skipValue, skipValue + limit),
+                    elementsTotal: resArray.length,
+                    currentPage: page,
+                    pageQty: Math.ceil(resArray.length / Number(limit))
                 }
                 break;
         }

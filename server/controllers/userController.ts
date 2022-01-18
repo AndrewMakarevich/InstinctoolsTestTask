@@ -5,11 +5,11 @@ import fileUpload from 'express-fileupload';
 class UserController {
     async getUsers(req: Request, res: Response, next: NextFunction) {
         try {
-            const userType = req.query.type;
-            const filterParams = req.query.filter;
+            const userType = req.query.type || 'all';
+            const filterParams = req.query.filter || "{}";
             const page = req.query.page || 1;
-            const limit = req.query.limit || 10;
-            const getUsersResponse = await UserService.getUsers(String(userType), JSON.parse(filterParams as string), String(page), String(limit));
+            const limit = req.query.limit || 2;
+            const getUsersResponse = await UserService.getUsers(String(userType), JSON.parse(filterParams as string), Number(page), Number(limit));
             return res.json(getUsersResponse);
         } catch (e) {
             next(e);
