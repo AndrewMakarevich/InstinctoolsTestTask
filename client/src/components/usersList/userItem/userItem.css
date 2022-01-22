@@ -4,9 +4,9 @@
     grid-gap: 10px;
     align-content: center;
     position:relative;
-    width: 100%;
+    max-width: 520px;
     height: 250px;
-    background-color: rgb(22, 22, 22);
+    background-color: var(--dark-block-color);
     border-radius: 15px;
     transform: scale(0);
     animation: surfacing .3s forwards;

@@ -1,0 +1,111 @@
+.filter-list__wrapper{
+    display: grid;
+    grid-gap:10px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    padding:15px;
+    border-radius:15px;
+    background-color: rgba(22, 22, 22, 0.9);
+}
+.filter-list__form{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding:10px;
+    background-color:rgba(22, 22, 22, 0.9);
+    border-radius: 15px;
+}
+.filter-list__label{
+    display: flex;
+    align-items: center;
+
+    z-index: 1;
+    position: relative;
+    color:var(--light-font-color);
+    font-family: Outfit;
+}
+/* FILTER INPUT */
+.filter-list__input{
+    position:relative;
+    color: var(--light-font-color);
+    font-family: Outfit;
+    background-color: transparent;
+    border:none;
+    padding-left: 10px;
+}
+.filter-list__input:focus{
+    outline: none;
+}
+.filter-list__label .filter-list__input-styled-line{
+    position:absolute;
+    z-index:-1;
+    height: 100%;
+    width: 0;
+    left:0;
+    top:0;
+    background-color: black;
+    transition: width .3s;
+    border-bottom: solid white 1px;
+}
+.filter-list__input:focus ~ .filter-list__input-styled-line{
+    width: 100%;
+}
+/* ---- */
+
+/* FILTER RADIO */
+.filter-list__radio-label{
+    cursor: pointer;
+}
+.filter-list__radio{
+    appearance: none;
+}
+.filter-list__radio-span{
+    position: absolute;
+    z-index: -1;
+    width: 0;
+    height: 100%;
+    top:0;
+    left:0;
+    background-color: rgb(56, 33, 87);
+    transition: width .3s;
+}
+.filter-list__radio:focus ~ .filter-list__radio-span{
+    width: 100%;
+}
+.filter-list__radio:checked ~ .filter-list__radio-span{
+    width: 100%;
+}
+/* --- */
+
+/* FILTER DATA INPUT */
+.filter-list__time-input{
+    padding: 0 10px;
+    border-radius: 15px;
+    border:none;
+    background-color: transparent;
+    color:var(--light-font-color);
+    font-family: Outfit;
+}
+.filter-list__time-input:focus{
+    outline:none;
+}
+.filter-list__time-input::-webkit-calendar-picker-indicator{
+    background-color: white;
+    border-radius: 15px;
+    cursor: pointer;
+}
+.clear-time-input__btn{
+    border:none;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 2px;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 2px;
+    color: white;
+    font-family: Outfit;
+    background-color: transparent;
+    cursor:pointer;
+    padding: 2px;
+}
+.clear-time-input__btn:hover{
+    background-color: white;
+    color: var(--light-font-hover-color);
+}
