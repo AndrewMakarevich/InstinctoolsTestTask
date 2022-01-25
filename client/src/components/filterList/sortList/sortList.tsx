@@ -1,7 +1,13 @@
-const SortList = ({ setSortType }: { setSortType: Function }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { useTypedSelector } from "../../../redux/hooks/useTypedSelector";
+import { UserStoreActions } from "../../../redux/reducers/userReducer";
+
+const SortList = () => {
+    const sortType = useTypedSelector(state => state.user.sortType);
+    const dispatch = useDispatch();
     return (
         <form>
-            <select onChange={(e) => setSortType(e.target.value)}>
+            <select onChange={(e) => dispatch({ type: UserStoreActions.CHANGE_SORT_TYPE, payload: e.target.value })}>
                 <optgroup label="Sort by name">
                     <option value='{"param":"fullName.name", "type":1}'>Sort by name from A to Z</option>
                     <option value='{"param":"fullName.name", "type":-1}'>Sort by name from Z to A</option>

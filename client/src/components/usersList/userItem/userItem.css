@@ -3,7 +3,7 @@
     grid-auto-rows: min-content;
     grid-gap: 10px;
     align-content: center;
-    position:relative;
+    /* position:relative; */
     max-width: 520px;
     height: 250px;
     background-color: var(--dark-block-color);
@@ -12,16 +12,6 @@
     animation: surfacing .3s forwards;
     
     padding:10px;
-}
-.open-user-card-modal__btn{
-    position: absolute;
-    cursor:pointer;
-    width: 100%;
-    height: 100%;
-    border-radius: 15px;
-    top:0;
-    left:0;
-    background-color: transparent;
 }
 .user-card__img{
     grid-column:1;

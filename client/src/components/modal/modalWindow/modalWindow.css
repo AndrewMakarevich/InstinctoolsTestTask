@@ -1,0 +1,36 @@
+.modal-window__wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position:fixed;
+    width: 100vw;
+    height: 100vh;
+    top:0;
+    left:0;
+    background-color: rgb(0, 0, 0, 0.7);
+    
+    z-index: 9999;
+}
+.modal-window__close-btn{
+    width: 25px;
+    height: 25px;
+    font-size: 15px;
+    cursor:pointer;
+    border-radius:50%;
+    border:none;
+    color:white;
+    background-color:transparent;
+    transition: color .3s;
+}
+.modal-window__close-btn:hover{
+    color:rgb(248, 160, 144);
+}
+.modal-window__close-btn:focus{
+    color:rgb(248, 120, 97);
+}
+.modal-window__content-block{
+    max-width: 90%;
+    padding: 15px;
+    border-radius: 15px;
+    background-color: var(--dark-block-color);
+}

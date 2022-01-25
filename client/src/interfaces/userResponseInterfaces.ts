@@ -1,4 +1,7 @@
-interface IUsersFullName {
+// GET
+
+export interface IUsersFullName {
+    [key: string]: string
     name: string,
     surname: string,
     patronymic: string
@@ -32,4 +35,9 @@ export interface IgetUsersResponse {
     elementsTotal: number,
     currentPage: number,
     pageQty: number
+}
+
+// POST
+export interface IcreateUserResponse {
+    message: string
 }

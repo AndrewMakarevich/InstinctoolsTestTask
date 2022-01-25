@@ -11,6 +11,8 @@
   --dark-font-hover-color:rgb(92, 61, 46);
 
   --dark-block-color:rgb(22, 22, 22);
+
+  --main-font-family:Outfit;
 }
 body {
   min-height: 100vh;

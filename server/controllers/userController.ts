@@ -8,7 +8,7 @@ class UserController {
         try {
             const userType = req.query.type || 'all';
             const filterParams = req.query.filter || "{}";
-            const sort = req.query.sort === '{}' || undefined ? '{"param":"fullName.name", "type":1}' : req.query.sort;
+            const sort = req.query.sort === undefined || req.query.sort === "{}" ? '{"param":"fullName.name", "type":1}' : req.query.sort;
             const page = req.query.page || 1;
             const limit = req.query.limit || 10;
             const getUsersResponse = await UserService.getUsers(String(userType), JSON.parse(filterParams as string), String(sort), Number(page), Number(limit));
@@ -19,7 +19,7 @@ class UserController {
     }
     async createEmployee(req: Request, res: Response, next: NextFunction) {
         try {
-            const photo: fileUpload.UploadedFile = req.files!.photo as fileUpload.UploadedFile;
+            const photo: fileUpload.UploadedFile = req.files?.photo as fileUpload.UploadedFile;
             const { fullName, salary, workPlaceNumber, startTimeLunch, endTimeLunch } = req.body;
             const employeeCreateResponse = await UserService.createEmployee(fullName, salary, photo, workPlaceNumber, startTimeLunch, endTimeLunch);
             return res.json(employeeCreateResponse);
@@ -29,8 +29,9 @@ class UserController {
     }
     async createManager(req: Request, res: Response, next: NextFunction) {
         try {
-            const photo: fileUpload.UploadedFile = req.files!.photo as fileUpload.UploadedFile;
+            const photo: fileUpload.UploadedFile = req.files?.photo as fileUpload.UploadedFile;
             const { fullName, salary, startTimeReception, endTimeReception } = req.body;
+            console.log({ fullName, salary, startTimeReception, endTimeReception });
             const managerCreateResponse = await UserService.createManager(fullName, salary, photo, startTimeReception, endTimeReception);
             return res.json(managerCreateResponse);
         } catch (e) {

@@ -1,6 +1,15 @@
-
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
+import { UserStoreActions } from '../../redux/reducers/userReducer';
 import './paginationLine.css';
-const PaginationLine = ({ setCurrentPage, pagesQty, currentPage }: { setCurrentPage: Function, pagesQty: number | undefined, currentPage: number | undefined }) => {
+const PaginationLine = () => {
+  const userStore = useTypedSelector(state => state.user);
+  const usersData = userStore.usersData;
+  const currentPage = usersData.currentPage;
+  const pagesQty = usersData.pageQty;
+  const dispatch = useDispatch();
+
   const pagesCountArr: number[] = [];
   if (pagesQty) {
     for (let i = 1; i <= pagesQty; i++) {
@@ -48,22 +57,28 @@ const PaginationLine = ({ setCurrentPage, pagesQty, currentPage }: { setCurrentP
                     className={`pagination-line__pages-btn`}
                     onClick={() => {
                       if (index === 1) {
-                        setCurrentPage(Number(visiblePages[2]) - 1);
+                        dispatch({ type: UserStoreActions.CHANGE_CURRENT_PAGE, payload: Number(visiblePages[2]) - 1 });
                       } else if (index === visiblePages.length - 2) {
-                        setCurrentPage(Number(visiblePages[visiblePages.length - 3]) + 1);
+                        dispatch({ type: UserStoreActions.CHANGE_CURRENT_PAGE, payload: Number(visiblePages[visiblePages.length - 3]) + 1 });
                       }
 
                     }}>
                     <span>{pageNumber}</span>
                   </button>
                   :
-                  <button className={`pagination-line__pages-btn ${currentPage == pageNumber ? 'currentPage' : ''}`} onClick={() => setCurrentPage(pageNumber)}><span>{pageNumber}</span></button>
+                  <button
+                    className={`pagination-line__pages-btn ${currentPage === pageNumber ? 'currentPage' : ''}`}
+                    onClick={() => {
+                      dispatch({ type: UserStoreActions.CHANGE_CURRENT_PAGE, payload: pageNumber })
+                    }
+                    }>
+                    <span>{pageNumber}</span>
+                  </button>
               }
             </li>
           )
         }
       </ul>
-
     </div>
   )
 };

@@ -19,7 +19,7 @@ class UserService {
         throw ApiError.badRequest((<Error | ApiError>e).message)
       }
     }
-    return undefined;
+    return 'standartTemplate.jpg';
   }
   async getUsers(type: string, filterObj: IintermediatePropObj, sort: string, page: number, limit: number) {
     if (!(type === "employee" || type === "manager" || type === "all")) {
@@ -27,8 +27,9 @@ class UserService {
     }
     const filterProps: IintermediatePropObj = {
     };
+    console.log(sort);
     function createFilterObj(obj: IintermediatePropObj, setToObj: IintermediatePropObj, keyName?: string) {
-      console.log(obj);
+      // console.log(obj);
       for (let key in obj) {
         if (typeof obj[key] === "object") {
           const newKeyName = keyName ? `${keyName}${key}.` : `${key}.`;
@@ -41,7 +42,7 @@ class UserService {
             if (rangeArray.filter((el) => el === '').length === 0) setToObj[newKeyName] = { $gte: rangeArray[0], $lte: rangeArray[1] };
             else rangeArray.filter((el) => el !== '').forEach(el => setToObj[newKeyName] = el);
           } else if (Number(obj[key])) {
-            setToObj[newKeyName] = obj[key];
+            setToObj[newKeyName] = Number(obj[key]);
           } else {
             setToObj[newKeyName] = { $regex: obj[key], $options: 'i' };
           }
@@ -78,6 +79,9 @@ class UserService {
           { $unionWith: { coll: 'employees' } },
           { $match: filterProps }
         ]).count('elementsTotal');
+        if (!usersAmount) {
+          usersAmount = 0;
+        }
         const users = await ManagerModel
           .aggregate([
             {
@@ -89,9 +93,9 @@ class UserService {
           .sort({ [querySortObj.param]: querySortObj.type }).skip(skipValue).limit(limit);
         result = {
           result: users,
-          elementsTotal: usersAmount['elementsTotal'],
+          elementsTotal: usersAmount === undefined ? 0 : usersAmount['elementsTotal'],
           currentPage: page,
-          pageQty: Math.ceil(usersAmount['elementsTotal'] / Number(limit))
+          pageQty: Math.ceil(usersAmount['elementsTotal'] / Number(limit)) || 0
         }
         break;
     }

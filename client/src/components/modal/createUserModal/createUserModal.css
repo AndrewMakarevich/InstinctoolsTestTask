@@ -1,0 +1,152 @@
+.open-create-user-modal__btn{
+    border-radius:5px;
+    background-color:var(--dark-block-color);
+    color:var(--light-font-color);
+    font-family: var(--main-font-family);
+    border:none;
+    padding: 5px;
+    font-size: 1.2em;
+    cursor:pointer;
+    transition: background-color .3s;
+}
+.open-create-user-modal__btn:hover{
+    background-color:black;
+}
+
+.create-user__form{
+    color:var(--light-font-color);
+    font-family: var(--main-font-family);
+    display: flex;
+    flex-direction: column;
+}
+.create-user__avatar{
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius:50%;
+}
+.create-user-forms__wrapper{
+    display: grid;
+    grid-gap:10px 5px;
+    grid-template-columns: repeat(2,1fr);
+    grid-auto-rows: min-content;
+    grid-auto-columns: min-content;
+}
+.choose-avatar__form{
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    grid-column: 1/2;
+    grid-row:1/3;
+}
+.common-params__form{
+    grid-column: 2/-1;
+}
+.user-type__form{
+    grid-column: 1;
+    grid-row:3/5;
+}
+.employee-params__form{
+    grid-column: 2/-1;
+    grid-row:3/5;
+}
+.manager-params__form{
+    grid-column: 2/-1;
+    grid-row:3/5;
+}
+
+/* INPUTS */
+.create-user__input{
+    width: 100%;
+    color:var(--light-font-color);
+    font-family: var(--main-font-family);
+    padding-left: 10px;
+    background-color: transparent;
+    border:none;
+    border-bottom:solid white 1px;
+}
+.create-user__input:focus{
+    outline: none;
+}
+
+/* FILE INPUT */
+.create-user__file-input__label{
+    position: relative;
+    width:150px;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    cursor:pointer;
+    border:solid white 1px;
+    border-radius:50%;
+}
+.create-user__file-input{
+    /* appearance: none; DOESNT WORK */
+    width: .1px;
+    height: .1px;
+    opacity: 0;
+    margin: 0;
+    padding:0;
+}
+.create-user__file-input__label span{
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left:0;
+    opacity: 0;
+    background-color:rgba(0, 0, 0,0.4);
+    border-radius:50%;
+    transition: opacity .3s;
+}
+.create-user__file-input__label span::before{
+    position: relative;
+    content: "AVATAR";
+}
+.create-user__file-input__label:hover span{
+   opacity:1;
+}
+
+/* RADIO */
+.create-user__radio-label{
+    z-index: 1;
+    position:relative;
+    cursor: pointer;
+}
+.create-user__radio{
+    appearance:none;
+}
+.create-user__radio:checked~span{
+    width: 100%;
+}
+.create-user__radio-label span{
+    position: absolute;
+    top:0;
+    left:0;
+    height: 100%;
+    width: 0%;
+    background-color:black;
+    transition: width .3s;
+    z-index: -1;
+}
+
+/* BTN */
+.create-user__btn{
+    border:none;
+    border-radius:15px;
+    padding:3px 7px;
+    color:var(--light-font-color);
+    font-family: var(--main-font-family);
+    background-color: transparent;
+    cursor:pointer;
+    grid-column: 1;
+    grid-row: 4/5;
+    transition: color .2s, background-color .3s;
+}
+.create-user__btn:hover{
+    background-color: white;
+    color: var(--dark-font-color);
+}

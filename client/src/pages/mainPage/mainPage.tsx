@@ -1,23 +1,27 @@
 
 import './mainPage.css';
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import UsersList from "../../components/usersList/usersList";
 import { getUsers } from "../../https/userApi";
-import { IgetUsersResponse } from "../../interfaces/userResponseInterfaces";
 import PaginationLine from '../../components/pagination/paginationLine';
 import FilterList from '../../components/filterList/filterList';
+import { useDispatch } from 'react-redux';
+import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
+import { UserStoreActions } from '../../redux/reducers/userReducer';
+import ModalWindow from '../../components/modal/modalWindow/modalWindow';
+import CreateUserModal from '../../components/modal/createUserModal/createUserModal';
 interface stateObject {
 
     [key: string]: any;
 }
+
 const MainPage = () => {
-    const [usersData, setUsersData] = useState<IgetUsersResponse>();
-    const [filterObject, setFilterObject] = useState<stateObject>({});
-    const [currentPage, setCurrentPage] = useState(undefined);
-    const [userType, setUserType] = useState('all');
-    const [sortType, setSortType] = useState('{}');
+    const dispatch = useDispatch();
+    const userStore = useTypedSelector(state => state.user);
+    // console.log(userStore);
     function getUsersData(pageQuery?: number, filterQuery?: string, userType?: string, sort?: string) {
-        getUsers(pageQuery, filterQuery, userType, sort).then(data => setUsersData(data));
+        getUsers(pageQuery, filterQuery, userType, sort)
+            .then(data => dispatch({ type: UserStoreActions.SET_USERS_DATA, payload: data }));
     }
     function getUsersWithTimeout() {
         let timeout: ReturnType<typeof setTimeout>;
@@ -29,23 +33,23 @@ const MainPage = () => {
 
         }
     }
-
     const timeoutSearch = useRef(getUsersWithTimeout())
     useEffect(() => {
         getUsersData();
+
     }, []);
     useEffect(() => {
-        timeoutSearch.current(filterObject, userType, sortType);
-        console.log(filterObject);
-    }, [filterObject, userType, sortType]);
+        getUsersData(userStore.currentPage, JSON.stringify(userStore.filterObj), userStore.userType, userStore.sortType);
+    }, [userStore.currentPage]);
     useEffect(() => {
-        getUsersData(currentPage, JSON.stringify(filterObject), userType, sortType);
-    }, [currentPage])
+        timeoutSearch.current(userStore.filterObj, userStore.userType, userStore.sortType)
+    }, [userStore.userType, userStore.filterObj, userStore.sortType])
     return (
         <main className="main-page__wrapper">
-            <FilterList filterObject={filterObject} setFilterObject={setFilterObject} userType={userType} setUserType={setUserType} setSortType={setSortType} />
-            <UsersList users={usersData?.result} />
-            <PaginationLine setCurrentPage={setCurrentPage} pagesQty={usersData?.pageQty} currentPage={usersData?.currentPage} />
+            <FilterList />
+            <CreateUserModal updateUserListFunc={getUsersData} />
+            <UsersList users={userStore.usersData.result} />
+            <PaginationLine />
         </main>
     )
 };

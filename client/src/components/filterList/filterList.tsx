@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
+import { UserStoreActions } from '../../redux/reducers/userReducer';
 import CommonParamsFilterList from './commonParamsFilterList/commonParamsFilterList';
 import EmployeeFilterList from './employeeFilterList/employeeFilterList';
 import './filterList.css';
@@ -8,40 +11,33 @@ import UsersTypeFilter from './usersTypeFilter/usersTypeFilter';
 interface test {
   [key: string]: any;
 }
-const FilterList = ({ filterObject, setFilterObject, userType, setUserType, setSortType }: { filterObject: test, setFilterObject: Function, userType: string, setUserType: Function, setSortType: Function }) => {
-  function setFullNameParam(param: string, value: string | number) {
-    if (!filterObject['fullName']) {
-      filterObject['fullName'] = {};
-    }
-    if (typeof value === 'string' && !value.split(' ').join('')) {
-      delete filterObject['fullName'][param]
-    } else filterObject['fullName'][param] = value;
-    return setFilterObject({ ...filterObject });
-  }
+const FilterList = () => {
+  const dispatch = useDispatch();
+  const { filterObj, userType } = useTypedSelector(state => state.user);
   function setTimeRange(value: string, keyName: 'startTimeLunch' | 'endTimeLunch' | 'startTimeReception' | 'endTimeReception', index: 'start' | 'end') {
-    if (!filterObject[keyName]) {
-      if (index === 'start') return setFilterObject({ ...filterObject, [keyName]: `${value}-` })
-      else if (index === 'end') return setFilterObject({ ...filterObject, [keyName]: `-${value}` })
+    if (!filterObj[keyName]) {
+      if (index === 'start') return dispatch({ type: UserStoreActions.CHANGE_FILTER_OBJECT, payload: { ...filterObj, [keyName]: `${value}-` } });
+      else if (index === 'end') return dispatch({ type: UserStoreActions.CHANGE_FILTER_OBJECT, payload: { ...filterObj, [keyName]: `-${value}` } });
     } else {
       if (index === 'start') {
-        const timeValues = filterObject[keyName].split('-');
+        const timeValues = filterObj[keyName].split('-');
         timeValues[0] = value;
-        filterObject[keyName] = timeValues.join('-');
-        return setFilterObject({ ...filterObject });
+        filterObj[keyName] = timeValues.join('-');
+        return dispatch({ type: UserStoreActions.CHANGE_FILTER_OBJECT, payload: { ...filterObj } })
       } else {
-        const timeValues = filterObject[keyName].split('-');
+        const timeValues = filterObj[keyName].split('-');
         timeValues[1] = value;
-        filterObject[keyName] = timeValues.join('-');
-        return setFilterObject({ ...filterObject });
+        filterObj[keyName] = timeValues.join('-');
+        return dispatch({ type: UserStoreActions.CHANGE_FILTER_OBJECT, payload: { ...filterObj } })
       }
     }
   }
 
   function setPrimitiveFilterParam(param: string, value: string | number) {
     if (!String(value).split(' ').join('')) {
-      delete filterObject[param]
-    } else filterObject[param] = value;
-    return setFilterObject({ ...filterObject });
+      delete filterObj[param]
+    } else filterObj[param] = value;
+    return dispatch({ type: UserStoreActions.CHANGE_FILTER_OBJECT, payload: { ...filterObj } });
   }
   function clearTimeRange(inputsClassName: string, filterPropName: "startTimeLunch" | "endTimeLunch" | "startTimeReception" | "endTimeReception") {
     setPrimitiveFilterParam(filterPropName, '');
@@ -49,8 +45,8 @@ const FilterList = ({ filterObject, setFilterObject, userType, setUserType, setS
   }
   return (
     <article className="filter-list__wrapper">
-      <CommonParamsFilterList setFullNameParam={setFullNameParam} setPrimitiveFilterParam={setPrimitiveFilterParam} />
-      <UsersTypeFilter setUserType={setUserType} />
+      <CommonParamsFilterList setPrimitiveFilterParam={setPrimitiveFilterParam} />
+      <UsersTypeFilter />
       {
         userType === 'employee' || userType === 'all' ?
           <EmployeeFilterList setTimeRange={setTimeRange} clearTimeRange={clearTimeRange} setPrimitiveFilterParam={setPrimitiveFilterParam} />
@@ -63,7 +59,7 @@ const FilterList = ({ filterObject, setFilterObject, userType, setUserType, setS
           :
           null
       }
-      <SortList setSortType={setSortType} />
+      <SortList />
     </article>
   )
 }

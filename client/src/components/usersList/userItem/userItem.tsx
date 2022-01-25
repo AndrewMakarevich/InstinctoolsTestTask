@@ -12,7 +12,6 @@ const UserItem = ({ user }: { user: IEmployeeObj | IManagerObj }) => {
   return (
 
     <section className="user-card">
-      {/* <button className="open-user-card-modal__btn"></button> */}
       <img className="user-card__img" alt={`${user.fullName.name}'s avatar`} src={`${process.env.REACT_APP_SERVER_URL}/avatar/${user.photo}`} />
       <h3 className="user-card__info-header">Info</h3>
       <ul className="user-card__info-list">
