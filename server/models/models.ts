@@ -5,9 +5,9 @@ import { IUser, IManager, IEmployee } from '../interfaces/userSchemaInterfaces';
 // SCHEMAS
 const UserShema = new Schema<IUser>({
     fullName: {
-        name: { type: String, required: true },
-        surname: { type: String, required: true },
-        patronymic: { type: String, required: true }
+        name: { type: String, required: true, trim: true },
+        surname: { type: String, required: true, trim: true },
+        patronymic: { type: String, required: true, trim: true }
     },
     salary: { type: Number, default: 0, min: 0 },
     photo: String

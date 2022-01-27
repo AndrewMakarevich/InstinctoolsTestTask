@@ -6,8 +6,11 @@ import { IUsersFullName } from "../../../interfaces/userResponseInterfaces";
 import ModalWindow from "../modalWindow/modalWindow";
 import './createUserModal.css';
 import { validateUserInput, validateRangeTimes } from "../../../validator/validateUserInput";
+import { useDispatch } from "react-redux";
+import { UserStoreActions } from "../../../redux/reducers/userReducer";
 
 const CreateUserModal = ({ updateUserListFunc }: { updateUserListFunc: Function }) => {
+  const dispatch = useDispatch();
   const [modalState, setModalState] = useState(false);
   const [currentUserType, setCurrentUserType] = useState<'employee' | 'manager'>('employee');
   const [userPhoto, setUserPhoto] = useState<File>();
@@ -61,16 +64,12 @@ const CreateUserModal = ({ updateUserListFunc }: { updateUserListFunc: Function 
       }
       const response = await createUser(type, formData);
       alert(response.message);
-      updateUserListFunc();
+      dispatch({ type: UserStoreActions.FETCH_USERS });
     } catch (e) {
       alert((e as AxiosError).response?.data.message);
     }
 
   }
-
-  useEffect(() => {
-    console.log({ ...commonParams, ...employeeParams, ...managerParams });
-  }, [commonParams, employeeParams, managerParams]);
 
   return (
     <>

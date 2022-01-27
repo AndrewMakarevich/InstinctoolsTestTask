@@ -41,3 +41,5 @@ export interface IgetUsersResponse {
 export interface IcreateUserResponse {
     message: string
 }
+export interface IeditUserResponse extends IcreateUserResponse {
+}

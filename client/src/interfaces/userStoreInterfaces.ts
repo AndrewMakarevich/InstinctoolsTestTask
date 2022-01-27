@@ -20,7 +20,10 @@ interface IUserStoreDataAction {
     type: UserStoreActions.SET_USERS_DATA,
     payload: IgetUsersResponse
 };
-export type UserAction = IUserStoreTypeAction | IUserStoreSortAction | IUserStoreFilterAction | IUserStorePageAction | IUserStoreDataAction;
+interface IUserStoreFetchUsersAction {
+    type: UserStoreActions.FETCH_USERS
+}
+export type UserAction = IUserStoreTypeAction | IUserStoreSortAction | IUserStoreFilterAction | IUserStorePageAction | IUserStoreDataAction | IUserStoreFetchUsersAction;
 
 
 
@@ -29,6 +32,7 @@ export interface IUserStoreState {
     sortType: string,
     filterObj: { [key: string]: any },
     currentPage: number,
-    usersData: IgetUsersResponse
+    usersData: IgetUsersResponse,
+    fetchUsers: boolean;
 
 }

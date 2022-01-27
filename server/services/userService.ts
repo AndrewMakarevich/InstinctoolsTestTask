@@ -19,7 +19,7 @@ class UserService {
         throw ApiError.badRequest((<Error | ApiError>e).message)
       }
     }
-    return 'standartTemplate.jpg';
+    return process.env.TEMPLATE_AVATAR_NAME;
   }
   async getUsers(type: string, filterObj: IintermediatePropObj, sort: string, page: number, limit: number) {
     if (!(type === "employee" || type === "manager" || type === "all")) {
@@ -27,7 +27,6 @@ class UserService {
     }
     const filterProps: IintermediatePropObj = {
     };
-    console.log(sort);
     function createFilterObj(obj: IintermediatePropObj, setToObj: IintermediatePropObj, keyName?: string) {
       // console.log(obj);
       for (let key in obj) {
@@ -155,21 +154,20 @@ class UserService {
     const employee = await EmployeeModel.findById(id);
     const updateObj: IintermediatePropObj = {
       salary,
-      photo: this.uploadPhoto('avatar', photo),
+      photo: photo ? this.uploadPhoto('avatar', photo) : undefined,
       workPlaceNumber,
       startTimeLunch,
       endTimeLunch
     };
-    if (employee?.photo && photo) {
-      fs.unlink(path.resolve(__dirname, "..", "static", "avatar", employee.photo), () => { })
-    }
     if (fullName) {
       const fullNameObj: IUserFullName = JSON.parse(fullName);
       Object.keys(fullNameObj).forEach(key => {
         return updateObj[`fullName.${key}`] = fullNameObj[key]
       });
     }
-
+    if (employee?.photo && photo && employee.photo !== process.env.TEMPLATE_AVATAR_NAME) {
+      fs.unlink(path.resolve(__dirname, "..", "static", "avatar", employee.photo), () => { })
+    }
     await EmployeeModel.findByIdAndUpdate({ _id: id }, updateObj);
     return { message: 'Employee updated succesfully' }
   }
@@ -177,20 +175,19 @@ class UserService {
     const manager = await ManagerModel.findById(id);
     const updateObj: IintermediatePropObj = {
       salary,
-      photo: this.uploadPhoto('avatar', photo),
+      photo: photo ? this.uploadPhoto('avatar', photo) : undefined,
       startTimeReception,
       endTimeReception
     };
-    if (manager?.photo && photo) {
-      fs.unlink(path.resolve(__dirname, "..", "static", "avatar", manager.photo), () => { })
-    }
     if (fullName) {
       const fullNameObj: IUserFullName = JSON.parse(fullName);
       Object.keys(fullNameObj).forEach(key => {
         return updateObj[`fullName.${key}`] = fullNameObj[key]
       });
     }
-
+    if (manager?.photo && photo && manager.photo !== process.env.TEMPLATE_AVATAR_NAME) {
+      fs.unlink(path.resolve(__dirname, "..", "static", "avatar", manager.photo), () => { })
+    }
     await ManagerModel.findByIdAndUpdate({ _id: id }, updateObj);
     return { message: 'Manager updated succesfully' }
   }
