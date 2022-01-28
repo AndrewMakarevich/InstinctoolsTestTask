@@ -12,14 +12,14 @@ const UsersList = ({ users }: { users: (IEmployeeObj | IManagerObj)[] | undefine
       {
         users ?
           users.map(user =>
-            <div className="user-card">
+            <div className="user-card" key={user._id}>
               <button
                 className="open-user-card-modal__btn"
                 onClick={() => {
                   setModalState(true);
                   setCurrentUser(user);
                 }}></button>
-              <UserItem key={user._id} user={user} />
+              <UserItem user={user} />
             </div>
           ) :
           <h3>data is loading</h3>

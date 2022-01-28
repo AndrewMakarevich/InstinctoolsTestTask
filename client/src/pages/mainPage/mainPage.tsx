@@ -23,7 +23,6 @@ const MainPage = () => {
         filterQuery: string = JSON.stringify(userStore.filterObj),
         userType: string = userStore.userType,
         sort: string = userStore.sortType) {
-        console.log(userStore.userType);
         getUsers(pageQuery, filterQuery, userType, sort)
             .then(data => dispatch({ type: UserStoreActions.SET_USERS_DATA, payload: data }));
     }
@@ -39,19 +38,15 @@ const MainPage = () => {
     }
     const timeoutSearch = useRef(getUsersWithTimeout())
     useEffect(() => {
-        console.log('init useEffect');
         getUsersData();
     }, []);
     useEffect(() => {
-        console.log('first useEffect');
         getUsersData(userStore.currentPage, JSON.stringify(userStore.filterObj), userStore.userType, userStore.sortType);
     }, [userStore.currentPage]);
     useEffect(() => {
-        console.log('second useEffect');
         timeoutSearch.current(userStore.filterObj, userStore.userType, userStore.sortType)
     }, [userStore.userType, userStore.filterObj, userStore.sortType]);
     useEffect(() => {
-        console.log(userStore.fetchUsers);
         getUsersData();
     }, [userStore.fetchUsers])
     return (

@@ -1,7 +1,6 @@
 import { $host } from ".";
 import { IgetUsersResponse, IcreateUserResponse, IeditUserResponse } from "../interfaces/userResponseInterfaces";
 export const getUsers = async (pageQuery: number = 1, filterQuery: string = '{}', userType: string, sort: string = '{}') => {
-    console.log(`/user/get?type=${userType}&filter=${filterQuery}&sort=${sort}&page=${pageQuery}&limit=5`);
     const response = await $host.get<IgetUsersResponse>(`/user/get?type=${userType || 'all'}&filter=${filterQuery}&sort=${sort}&page=${pageQuery}&limit=5`);
     return response.data;
 }

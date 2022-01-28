@@ -1,6 +1,6 @@
 export function validateUserInput(inputType: string, inputValue: string) {
     if (!inputValue) return;
-    if (inputType === 'fullName') {
+    if (inputType === 'name' || inputType === 'surname' || inputType === 'patronymic') {
         const regEx = /^\s*[a-zA-Zа-яА-ЯёЁ]{2,22}\s*$/g
         if (!regEx.test(inputValue)) {
             throw Error('Incorrect full name param.')
@@ -14,7 +14,7 @@ export function validateUserInput(inputType: string, inputValue: string) {
         }
         return;
     }
-    if (inputType === 'workplace') {
+    if (inputType === 'workPlaceNumber') {
         if ((Number(inputValue) < 0 && Number(inputValue) > 999) || !Number(inputValue)) {
             throw Error('Incorrect workplace number param, workplace cant be negative and higher than 999');
         }
