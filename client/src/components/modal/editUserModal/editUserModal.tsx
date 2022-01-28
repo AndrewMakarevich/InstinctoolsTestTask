@@ -67,15 +67,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
     delete paramsToEdit[param];
     setParamsToEdit({ ...paramsToEdit });
   }
-  function toggleEditMode(editMode: boolean) {
-    const editUserBlock = document.querySelector('.edit-user__wrapper');
-    const editUserInputs: NodeListOf<HTMLInputElement> | undefined = editUserBlock?.querySelectorAll('form label input');
-    console.log(editUserInputs);
-    editUserInputs?.forEach(input => {
-      input.disabled = editMode;
-    });
-
-  }
   useEffect(() => {
     setCurrentUser(userData);
     setParamsToEdit({});
@@ -84,9 +75,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
     console.log(paramsToEdit);
 
   }, [paramsToEdit]);
-  useEffect(() => {
-    toggleEditMode(editMode);
-  }, [editMode]);
   const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
   return (
     <ModalWindow modalState={modalState} setModalState={setModalState}>

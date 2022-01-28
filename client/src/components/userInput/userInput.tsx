@@ -23,7 +23,7 @@ export function UserInput({ inputType, header, userId, userParam, defValue, vali
       {header}:
       <input
         type={inputType}
-        key={userId}
+        key={defValue}
         defaultValue={defValue}
         onBlur={(e) => {
           try {
