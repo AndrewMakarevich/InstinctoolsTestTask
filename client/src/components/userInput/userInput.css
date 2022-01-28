@@ -1,0 +1,15 @@
+.user-param__input{
+    font-size: 1rem;
+    color:var(--light-font-color);
+    font-family: var(--main-font-family);
+    padding-left: 10px;
+    background-color: transparent;
+    border:none;
+    border-bottom:solid white 1px;
+}
+.user-param__input:focus{
+    outline: none;
+}
+.user-param__input:disabled{
+    border: none;
+}

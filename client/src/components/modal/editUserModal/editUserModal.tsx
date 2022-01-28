@@ -4,6 +4,7 @@ import { IEmployeeObj, IManagerObj, IUsersFullName } from "../../../interfaces/u
 import { validateRangeTimes, validateUserInput } from "../../../validator/validateUserInput";
 import DeleteUserBtn from "../../buttons/deleteUserBtn";
 import EditUserBtn from "../../buttons/editUserBtn";
+import BooleanUserCheckBox from "../../userCheckbox/userCheckBox";
 import { UserInput, UserTimeInput } from "../../userInput/userInput";
 import ModalWindow from "../modalWindow/modalWindow";
 import './editUserModal.css';
@@ -11,7 +12,7 @@ import './editUserModal.css';
 const EditUserModal = ({ modalState, setModalState, userData }: { modalState: boolean, setModalState: Function, userData: IEmployeeObj | IManagerObj }) => {
   const [currentUser, setCurrentUser] = useState(userData);
   const [paramsToEdit, setParamsToEdit] = useState<{ [key: string]: any }>({});
-  const [editMode, setEditMode] = useState<boolean>(true);
+  const [disableMode, setDisableMode] = useState<boolean>(true);
 
   function isUserEmployee(user: IEmployeeObj | IManagerObj): user is IEmployeeObj {
     if ((user as IEmployeeObj).startTimeReception && (user as IEmployeeObj).endTimeReception) {
@@ -70,6 +71,7 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
   useEffect(() => {
     setCurrentUser(userData);
     setParamsToEdit({});
+    setDisableMode(true);
   }, [userData]);
   useEffect(() => {
     console.log(paramsToEdit);
@@ -79,9 +81,12 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
   return (
     <ModalWindow modalState={modalState} setModalState={setModalState}>
       <div className="edit-user__wrapper">
+
+
         <form className="edit-user__avatar">
           <label data-def-bg={`url(${process.env.REACT_APP_SERVER_URL}/avatar/${currentUser.photo})`} className="edit-user__file-input__label" style={{ backgroundImage: `url(${process.env.REACT_APP_SERVER_URL}/avatar/${currentUser.photo})` }}>
             <input
+              disabled={disableMode}
               className="edit-user__file-input"
               type="file"
               accept="image/png, image/jpeg"
@@ -91,10 +96,12 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
           </label>
           {
             paramsToEdit.photo ?
-              <button onClick={(e) => {
-                e.preventDefault();
-                setPhoto('edit-user__file-input__label', 'edit-user__file-input');
-              }}>Remove photo</button>
+              <button
+                className="clear-file-input__btn delete__btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPhoto('edit-user__file-input__label', 'edit-user__file-input');
+                }}>Remove photo</button>
               :
               null
           }
@@ -102,6 +109,7 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
         </form>
         <form className="edit-user__common-params edit-user__form">
           <UserInput
+            disabledValue={disableMode}
             inputType='text'
             header="Name"
             userId={currentUser._id}
@@ -110,6 +118,7 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
             validator={validateUserInput}
             setParamFunc={setFullNameParam} />
           <UserInput
+            disabledValue={disableMode}
             inputType='text'
             header="Surname"
             userId={currentUser._id}
@@ -118,6 +127,7 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
             validator={validateUserInput}
             setParamFunc={setFullNameParam} />
           <UserInput
+            disabledValue={disableMode}
             inputType='text'
             header="Patronymic"
             userId={currentUser._id}
@@ -126,6 +136,7 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
             validator={validateUserInput}
             setParamFunc={setFullNameParam} />
           <UserInput
+            disabledValue={disableMode}
             inputType='number'
             header="Salary"
             userId={currentUser._id}
@@ -138,6 +149,7 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
           isUserEmployee(currentUser) ?
             <form className="edit-user__employee-params edit-user__form">
               <UserTimeInput
+                disabledValue={disableMode}
                 header="Lunch started at"
                 userId={currentUser._id}
                 userParam="startTimeLunch"
@@ -147,6 +159,7 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
                 validator={validateRangeTimes}
                 setParamFunc={setEditParam} />
               <UserTimeInput
+                disabledValue={disableMode}
                 header="Lunch ended at"
                 userId={currentUser._id}
                 userParam="endTimeLunch"
@@ -156,6 +169,7 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
                 validator={validateRangeTimes}
                 setParamFunc={setEditParam} />
               <UserInput
+                disabledValue={disableMode}
                 inputType="number"
                 header="Workplace number"
                 userId={currentUser._id}
@@ -168,6 +182,7 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
             :
             <form className="edit-user__manager-params edit-user__form">
               <UserTimeInput
+                disabledValue={disableMode}
                 header="Reception started at"
                 userId={currentUser._id}
                 userParam="startTimeReception"
@@ -177,6 +192,7 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
                 validator={validateRangeTimes}
                 setParamFunc={setEditParam} />
               <UserTimeInput
+                disabledValue={disableMode}
                 header="Reception ended at"
                 userId={currentUser._id}
                 userParam="endTimeReception"
@@ -191,8 +207,21 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
           <p>Created at: {new Date(currentUser.createdAt).toLocaleString('en-EN', dateOptions)}</p>
           <p>Updated at: {currentUser.createdAt === currentUser.updatedAt ? 'No updates' : new Date(currentUser.updatedAt).toLocaleString('en-EN', dateOptions)}</p>
         </div>
-        <EditUserBtn userType={isUserEmployee(currentUser) ? 'employee' : 'manager'} userId={currentUser._id} paramsToEdit={paramsToEdit} />
-        <DeleteUserBtn userType={isUserEmployee(currentUser) ? 'employee' : 'manager'} userId={currentUser._id} />
+        <BooleanUserCheckBox
+          labelText="Edit"
+          currentState={disableMode}
+          changeStateFunc={setDisableMode}
+        />
+        {
+          disableMode ?
+            null
+            :
+            <>
+              <EditUserBtn userType={isUserEmployee(currentUser) ? 'employee' : 'manager'} userId={currentUser._id} paramsToEdit={paramsToEdit} />
+              <DeleteUserBtn userType={isUserEmployee(currentUser) ? 'employee' : 'manager'} userId={currentUser._id} />
+            </>
+        }
+
       </div>
 
     </ModalWindow >

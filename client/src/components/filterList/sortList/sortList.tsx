@@ -7,7 +7,7 @@ const SortList = () => {
     const dispatch = useDispatch();
     return (
         <form>
-            <select onChange={(e) => dispatch({ type: UserStoreActions.CHANGE_SORT_TYPE, payload: e.target.value })}>
+            <select className="sort-user__select" onChange={(e) => dispatch({ type: UserStoreActions.CHANGE_SORT_TYPE, payload: e.target.value })}>
                 <optgroup label="Sort by name">
                     <option value='{"param":"fullName.name", "type":1}'>Sort by name from A to Z</option>
                     <option value='{"param":"fullName.name", "type":-1}'>Sort by name from Z to A</option>

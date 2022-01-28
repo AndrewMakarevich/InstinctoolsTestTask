@@ -1,6 +1,7 @@
-
+import './userInput.css'
 
 interface IUserInputProps {
+  disabledValue: boolean
   header: string,
   userId: string,
   userParam: string,
@@ -17,11 +18,13 @@ interface ItimeUserInput extends IUserInputProps {
   validator(startTime: string, endTime: string | number): void,
 }
 
-export function UserInput({ inputType, header, userId, userParam, defValue, validator, setParamFunc }: IdefaultUserInput) {
+export function UserInput({ disabledValue, inputType, header, userId, userParam, defValue, validator, setParamFunc }: IdefaultUserInput) {
   return (
     <label>
       {header}:
       <input
+        className="user-param__input"
+        disabled={disabledValue}
         type={inputType}
         key={defValue}
         defaultValue={defValue}
@@ -40,11 +43,12 @@ export function UserInput({ inputType, header, userId, userParam, defValue, vali
     </label>
   )
 };
-export function UserTimeInput({ header, userId, userParam, defValue, timePos, valueToCompare, validator, setParamFunc }: ItimeUserInput) {
+export function UserTimeInput({ disabledValue, header, userId, userParam, defValue, timePos, valueToCompare, validator, setParamFunc }: ItimeUserInput) {
   return (
     <label>
       {header}:
       <input
+        disabled={disabledValue}
         type="time"
         key={userId}
         defaultValue={defValue}
