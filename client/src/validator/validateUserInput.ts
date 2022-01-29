@@ -22,6 +22,9 @@ export function validateUserInput(inputType: string, inputValue: string) {
     }
 }
 export function validateRangeTimes(startTime: string, endTime: string) {
+    if (!startTime || !endTime) {
+        return;
+    }
     const startTimeDate = new Date().setHours(+startTime.split(':')[0], +startTime.split(':')[1], 0);
     const endTimeDate = new Date().setHours(+endTime.split(':')[0], +endTime.split(':')[1], 0);
     console.log(startTimeDate);

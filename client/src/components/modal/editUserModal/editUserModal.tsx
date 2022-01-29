@@ -81,8 +81,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
   return (
     <ModalWindow modalState={modalState} setModalState={setModalState}>
       <div className="edit-user__wrapper">
-
-
         <form className="edit-user__avatar">
           <label data-def-bg={`url(${process.env.REACT_APP_SERVER_URL}/avatar/${currentUser.photo})`} className="edit-user__file-input__label" style={{ backgroundImage: `url(${process.env.REACT_APP_SERVER_URL}/avatar/${currentUser.photo})` }}>
             <input
@@ -112,7 +110,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
             disabledValue={disableMode}
             inputType='text'
             header="Name"
-            userId={currentUser._id}
             userParam="name"
             defValue={currentUser.fullName.name}
             validator={validateUserInput}
@@ -121,7 +118,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
             disabledValue={disableMode}
             inputType='text'
             header="Surname"
-            userId={currentUser._id}
             userParam="surname"
             defValue={currentUser.fullName.surname}
             validator={validateUserInput}
@@ -130,7 +126,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
             disabledValue={disableMode}
             inputType='text'
             header="Patronymic"
-            userId={currentUser._id}
             userParam="patronymic"
             defValue={currentUser.fullName.patronymic}
             validator={validateUserInput}
@@ -139,7 +134,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
             disabledValue={disableMode}
             inputType='number'
             header="Salary"
-            userId={currentUser._id}
             userParam="salary"
             defValue={currentUser.salary}
             validator={validateUserInput}
@@ -151,7 +145,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
               <UserTimeInput
                 disabledValue={disableMode}
                 header="Lunch started at"
-                userId={currentUser._id}
                 userParam="startTimeLunch"
                 defValue={currentUser.startTimeLunch}
                 timePos="startTime"
@@ -161,7 +154,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
               <UserTimeInput
                 disabledValue={disableMode}
                 header="Lunch ended at"
-                userId={currentUser._id}
                 userParam="endTimeLunch"
                 defValue={currentUser.endTimeLunch}
                 timePos="endTime"
@@ -172,7 +164,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
                 disabledValue={disableMode}
                 inputType="number"
                 header="Workplace number"
-                userId={currentUser._id}
                 userParam="workPlaceNumber"
                 defValue={currentUser.workPlaceNumber}
                 validator={validateUserInput}
@@ -184,7 +175,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
               <UserTimeInput
                 disabledValue={disableMode}
                 header="Reception started at"
-                userId={currentUser._id}
                 userParam="startTimeReception"
                 defValue={currentUser.startTimeReception}
                 timePos="startTime"
@@ -194,7 +184,6 @@ const EditUserModal = ({ modalState, setModalState, userData }: { modalState: bo
               <UserTimeInput
                 disabledValue={disableMode}
                 header="Reception ended at"
-                userId={currentUser._id}
                 userParam="endTimeReception"
                 defValue={currentUser.endTimeReception}
                 timePos="endTime"

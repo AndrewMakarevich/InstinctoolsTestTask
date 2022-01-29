@@ -8,29 +8,33 @@ import './createUserModal.css';
 import { validateUserInput, validateRangeTimes } from "../../../validator/validateUserInput";
 import { useDispatch } from "react-redux";
 import { UserStoreActions } from "../../../redux/reducers/userReducer";
+import { ControlledUserInput, ControlledUserTimeInput } from "../../userInput/userInput";
 
 const CreateUserModal = ({ updateUserListFunc }: { updateUserListFunc: Function }) => {
   const dispatch = useDispatch();
-  const [modalState, setModalState] = useState(false);
-  const [currentUserType, setCurrentUserType] = useState<'employee' | 'manager'>('employee');
-  const [userPhoto, setUserPhoto] = useState<File>();
-  const [commonParams, setCommonParams] = useState({
+  const commonParamsObj = {
     fullName: {
       name: '',
       surname: '',
       patronymic: ''
     },
     salary: 0
-  });
-  const [employeeParams, setEmployeeParams] = useState({
+  };
+  const employeeParamsObj = {
     startTimeLunch: "",
     endTimeLunch: "",
     workPlaceNumber: ""
-  });
-  const [managerParams, setManagerParams] = useState({
+  };
+  const managerParamsObj = {
     startTimeReception: "",
     endTimeReception: ""
-  });
+  }
+  const [modalState, setModalState] = useState(false);
+  const [currentUserType, setCurrentUserType] = useState<'employee' | 'manager'>('employee');
+  const [userPhoto, setUserPhoto] = useState<File>();
+  const [commonParams, setCommonParams] = useState(commonParamsObj);
+  const [employeeParams, setEmployeeParams] = useState(employeeParamsObj);
+  const [managerParams, setManagerParams] = useState(managerParamsObj);
 
   function setPhoto(photoFile: File) {
     if (photoFile) {
@@ -47,6 +51,11 @@ const CreateUserModal = ({ updateUserListFunc }: { updateUserListFunc: Function 
     const fullNameObj: IUsersFullName = commonParams.fullName;
     fullNameObj[param] = value;
     setCommonParams({ ...commonParams, fullName: { ...fullNameObj } })
+  }
+  function setPrimitiveParam(paramState: any, setParamFunc: React.Dispatch<React.SetStateAction<any>>) {
+    return (param: string, value: string) => {
+      setParamFunc({ ...paramState, [param]: value });
+    };
   }
   async function sendUserData(type: 'employee' | 'manager') {
     try {
@@ -65,11 +74,21 @@ const CreateUserModal = ({ updateUserListFunc }: { updateUserListFunc: Function 
       const response = await createUser(type, formData);
       alert(response.message);
       dispatch({ type: UserStoreActions.FETCH_USERS });
+      clearParamsStates();
     } catch (e) {
       alert((e as AxiosError).response?.data.message);
     }
 
   }
+  function clearParamsStates() {
+    setCommonParams(commonParamsObj);
+    setEmployeeParams(employeeParamsObj);
+    setManagerParams(managerParamsObj);
+  }
+
+  useEffect(() => {
+    console.log({ ...commonParams, ...employeeParams, ...managerParams });
+  }, [commonParams, employeeParams, managerParams])
 
   return (
     <>
@@ -84,67 +103,42 @@ const CreateUserModal = ({ updateUserListFunc }: { updateUserListFunc: Function 
           </form>
           <form className="create-user__form common-params__form">
             <h3>Common parameters</h3>
-            <label>
-              Name:
-              <input
-                className="create-user__input"
-                value={commonParams.fullName.name}
-                onBlur={(e) => {
-                  try {
-                    validateUserInput('fullName', e.target.value)
-                  } catch (e) {
-                    alert(e);
-                    setFullNameParam('name', '')
-                  }
-                }}
-                onChange={(e) => setFullNameParam('name', e.target.value)}></input>
-            </label>
-            <label>
-              Surname:
-              <input
-                className="create-user__input"
-                value={commonParams.fullName.surname}
-                onBlur={(e) => {
-                  try {
-                    validateUserInput('fullName', e.target.value)
-                  } catch (e) {
-                    alert(e);
-                    setFullNameParam('surname', '')
-                  }
-                }}
-                onChange={(e) => setFullNameParam('surname', e.target.value)}></input>
-            </label>
-            <label>
-              Patronymic:
-              <input
-                className="create-user__input"
-                value={commonParams.fullName.patronymic}
-                onBlur={(e) => {
-                  try {
-                    validateUserInput('fullName', e.target.value)
-                  } catch (e) {
-                    alert(e);
-                    setFullNameParam('patronymic', '')
-                  }
-                }}
-                onChange={(e) => setFullNameParam('patronymic', e.target.value)}></input>
-            </label>
-            <label>
-              Salary:
-              <input
-                className="create-user__input"
-                type="number"
-                value={commonParams.salary}
-                onBlur={(e) => {
-                  try {
-                    validateUserInput('salary', e.target.value)
-                  } catch (e) {
-                    alert(e);
-                    setCommonParams({ ...commonParams, salary: 0 })
-                  }
-                }}
-                onChange={(e) => setCommonParams({ ...commonParams, salary: +e.target.value })}></input>
-            </label>
+            <ControlledUserInput
+              value={commonParams.fullName.name}
+              disabledValue={false}
+              inputType='text'
+              header='Name'
+              userParam='name'
+              validator={validateUserInput}
+              setParamFunc={setFullNameParam}
+            />
+            <ControlledUserInput
+              value={commonParams.fullName.surname}
+              disabledValue={false}
+              inputType='text'
+              header='Surname'
+              userParam='surname'
+              validator={validateUserInput}
+              setParamFunc={setFullNameParam}
+            />
+            <ControlledUserInput
+              value={commonParams.fullName.patronymic}
+              disabledValue={false}
+              inputType='text'
+              header='Patronymic'
+              userParam='patronymic'
+              validator={validateUserInput}
+              setParamFunc={setFullNameParam}
+            />
+            <ControlledUserInput
+              value={commonParams.salary}
+              disabledValue={false}
+              inputType='number'
+              header='Salary'
+              userParam='salary'
+              validator={validateUserInput}
+              setParamFunc={setPrimitiveParam(commonParams, setCommonParams)}
+            />
           </form>
           <form className="create-user__form user-type__form">
             <label className="create-user__radio-label">
@@ -162,90 +156,55 @@ const CreateUserModal = ({ updateUserListFunc }: { updateUserListFunc: Function 
             currentUserType === 'employee' ?
               <form className="create-user__form employee-params__form">
                 <h3>Employee parameters</h3>
-                <label>
-                  Lunch started at:
-                  <input
-                    className="create-user__data-input"
-                    type="time"
-                    value={employeeParams.startTimeLunch}
-                    onBlur={(e) => {
-                      try {
-                        validateRangeTimes(e.target.value, employeeParams.endTimeLunch);
-                      } catch (e) {
-                        alert(e);
-                        setEmployeeParams({ ...employeeParams, startTimeLunch: '' })
-                      }
-                    }}
-                    onChange={(e) => setEmployeeParams({ ...employeeParams, startTimeLunch: e.target.value })}></input>
-                </label>
-                <label>
-                  Lunch ended at:
-                  <input
-                    className="create-user__data-input"
-                    type="time"
-                    value={employeeParams.endTimeLunch}
-                    onBlur={(e) => {
-                      try {
-                        validateRangeTimes(employeeParams.startTimeLunch, e.target.value);
-                      } catch (e) {
-                        alert(e);
-                        setEmployeeParams({ ...employeeParams, endTimeLunch: '' })
-                      }
-                    }}
-                    onChange={(e) => setEmployeeParams({ ...employeeParams, endTimeLunch: e.target.value })}></input>
-                </label>
-                <label>
-                  Workplace number:
-                  <input
-                    className="create-user__input"
-                    type="number"
-                    value={employeeParams.workPlaceNumber}
-                    onBlur={(e) => {
-                      try {
-                        validateUserInput('workplace', e.target.value)
-                      } catch (e) {
-                        alert(e);
-                        setEmployeeParams({ ...employeeParams, workPlaceNumber: '' });
-                      }
-                    }}
-                    onChange={(e) => setEmployeeParams({ ...employeeParams, workPlaceNumber: e.target.value })}></input>
-                </label>
+                < ControlledUserTimeInput
+                  disabledValue={false}
+                  header="Lunch started at"
+                  userParam="startTimeLunch"
+                  value={employeeParams.startTimeLunch}
+                  timePos="startTime"
+                  valueToCompare={employeeParams.endTimeLunch}
+                  validator={validateRangeTimes}
+                  setParamFunc={setPrimitiveParam(employeeParams, setEmployeeParams)} />
+                < ControlledUserTimeInput
+                  disabledValue={false}
+                  header="Lunch ended at"
+                  userParam="endTimeLunch"
+                  value={employeeParams.endTimeLunch}
+                  timePos="endTime"
+                  valueToCompare={employeeParams.startTimeLunch}
+                  validator={validateRangeTimes}
+                  setParamFunc={setPrimitiveParam(employeeParams, setEmployeeParams)} />
+                <ControlledUserInput
+                  value={employeeParams.workPlaceNumber}
+                  disabledValue={false}
+                  inputType='number'
+                  header='Workplace number'
+                  userParam='workPlaceNumber'
+                  validator={validateUserInput}
+                  setParamFunc={setPrimitiveParam(employeeParams, setEmployeeParams)}
+                />
               </form>
               :
               <form className="create-user__form manager-params__form">
                 <h3>Manager parameters</h3>
-                <label>
-                  Reception started at:
-                  <input
-                    className="create-user__data-input"
-                    type="time"
-                    value={managerParams.startTimeReception}
-                    onBlur={(e) => {
-                      try {
-                        validateRangeTimes(e.target.value, managerParams.endTimeReception);
-                      } catch (e) {
-                        alert(e);
-                        setManagerParams({ ...managerParams, startTimeReception: '' });
-                      }
-                    }}
-                    onChange={(e) => setManagerParams({ ...managerParams, startTimeReception: e.target.value })}></input>
-                </label>
-                <label>
-                  Reception ended at:
-                  <input
-                    className="create-user__data-input"
-                    type="time"
-                    value={managerParams.endTimeReception}
-                    onBlur={(e) => {
-                      try {
-                        validateRangeTimes(managerParams.startTimeReception, e.target.value);
-                      } catch (e) {
-                        alert(e);
-                        setManagerParams({ ...managerParams, endTimeReception: '' });
-                      }
-                    }}
-                    onChange={(e) => setManagerParams({ ...managerParams, endTimeReception: e.target.value })}></input>
-                </label>
+                <ControlledUserTimeInput
+                  disabledValue={false}
+                  header="Reception started at"
+                  userParam="startTimeReception"
+                  value={managerParams.startTimeReception}
+                  timePos="startTime"
+                  valueToCompare={managerParams.endTimeReception || "00:00"}
+                  validator={validateRangeTimes}
+                  setParamFunc={setPrimitiveParam(managerParams, setManagerParams)} />
+                <ControlledUserTimeInput
+                  disabledValue={false}
+                  header="Reception ended at"
+                  userParam="endTimeReception"
+                  value={managerParams.endTimeReception}
+                  timePos="endTime"
+                  valueToCompare={managerParams.startTimeReception || "00:00"}
+                  validator={validateRangeTimes}
+                  setParamFunc={setPrimitiveParam(managerParams, setManagerParams)} />
               </form>
           }
           <button className="create-user__btn" onClick={() => sendUserData(currentUserType)}>Create user</button>

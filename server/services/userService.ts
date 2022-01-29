@@ -101,11 +101,15 @@ class UserService {
     return result;
   }
   async createEmployee(fullName: string, salary: number, photo: fileUpload.UploadedFile, workPlaceNumber: number, startTimeLunch: string, endTimeLunch: string) {
+    const fullNameObj: IUserFullName = JSON.parse(fullName);
+    if (!Object.keys(fullNameObj).filter((param: string) => {
+      return fullNameObj[param] !== '';
+    }).length) throw ApiError.badRequest('Not enough data');
     if (!fullName || !salary || !workPlaceNumber || !startTimeLunch || !endTimeLunch) {
       throw ApiError.badRequest('Not enough data');
     }
     await EmployeeModel.create({
-      fullName: JSON.parse(fullName),
+      fullName: fullNameObj,
       salary,
       photo: this.uploadPhoto('avatar', photo),
       workPlaceNumber,
