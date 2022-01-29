@@ -38,7 +38,7 @@ class UserService {
           let newKeyName = keyName ? `${keyName}${key}` : key;
           const rangeArray = `${obj[key]}`.split('-');
           if (rangeArray.length === 2) {
-            if (rangeArray.filter((el) => el === '').length === 0) setToObj[newKeyName] = { $gte: rangeArray[0], $lte: rangeArray[1] };
+            if (rangeArray.filter((el) => el === '').length === 0) setToObj[newKeyName] = { $gte: Number(rangeArray[0]), $lte: Number(rangeArray[1]) };
             else rangeArray.filter((el) => el !== '').forEach(el => setToObj[newKeyName] = el);
           } else if (Number(obj[key])) {
             setToObj[newKeyName] = Number(obj[key]);
@@ -50,7 +50,7 @@ class UserService {
       }
     }
     createFilterObj(filterObj, filterProps);
-    // console.log(filterProps);
+    console.log(filterProps);
     let result;
     let skipValue = limit * (page - 1);
     const querySortObj: ISortQueryObj = JSON.parse(sort);
