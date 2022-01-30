@@ -137,7 +137,7 @@ class UserService {
       throw ApiError.badRequest('There is no such employee');
     }
     await EmployeeModel.deleteOne({ _id: id });
-    if (employee.photo) {
+    if (employee.photo && employee.photo !== process.env.TEMPLATE_AVATAR_NAME) {
       fs.unlink(path.resolve(__dirname, "..", "static", "avatar", employee.photo), () => { })
     }
 
@@ -149,7 +149,7 @@ class UserService {
       throw ApiError.badRequest('There is no such manager');
     }
     await ManagerModel.deleteOne({ _id: id });
-    if (manager.photo) {
+    if (manager.photo && manager.photo !== process.env.TEMPLATE_AVATAR_NAME) {
       fs.unlink(path.resolve(__dirname, "..", "static", "avatar", manager.photo), () => { })
     }
     return { message: 'Manager deleted succesfully' }
