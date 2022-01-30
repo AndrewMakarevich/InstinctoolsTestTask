@@ -1,8 +1,7 @@
 .filter-list__wrapper{
     display: grid;
     grid-gap:10px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    padding:15px;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
     border-radius:15px;
     background-color: rgba(22, 22, 22, 0.9);
 }

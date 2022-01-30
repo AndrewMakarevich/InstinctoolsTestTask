@@ -150,3 +150,10 @@
     background-color: white;
     color: var(--dark-font-color);
 }
+
+@media (max-width:800px){
+    .create-user-forms__wrapper{
+        display: flex;
+        flex-direction: column;
+    }
+}

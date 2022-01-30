@@ -76,3 +76,10 @@
 .edit-user__file-input__label:hover span{
     opacity: 1;
 }
+
+@media (max-width:800px){
+    .edit-user__wrapper{
+        display: flex;
+        flex-direction: column;
+    }
+}
